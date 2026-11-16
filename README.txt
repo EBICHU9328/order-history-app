@@ -45,8 +45,11 @@ python serve.py 8000 0.0.0.0 으로도 띄울 수 있습니다. 단 이 경우 �
 
     python hooks/log_purchase.py dia_06_dn
 
+모드가 로그를 남기게 했다면 그 로그를 감시하는 방식이 가장 간단합니다.
+  모드: Log.d("DKSHOP", "PURCHASE dia_06_dn") 처럼 태그 DKSHOP + 상품 코드
+  PC:   python hooks/watch_adb.py --tag DKSHOP
 HTTP 로 받으려면 `python hooks/log_purchase.py --serve` (로컬 전용, 에뮬레이터는 `adb reverse tcp:8770 tcp:8770`).
-로그 감시 방식은 `python hooks/watch_log.py --file <로그경로>`.
+PC 파일 로그면 `python hooks/watch_log.py --file <로그경로>`.
 상품 코드·금액 표는 `hooks/purchase_codes.json`, 자세한 사용법은 `hooks/README.md`.
 
 ■ 초기화

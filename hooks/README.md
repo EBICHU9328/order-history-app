@@ -25,7 +25,27 @@
   그러면 게임 쪽에서는 `http://127.0.0.1:8770/purchase` 를 그대로 쓰면 된다.
 - 같은 코드가 3초 안에 두 번 오면 중복으로 보고 건너뛴다. 강제로 넣으려면 `{"code":"dia_06_dn","force":true}`.
 
-## 3. 로그 감시 (모드가 로그만 남길 때)
+## 3. 게임 로그 자동 감시 (모드가 로그를 남길 때) — 권장
+
+모드에서 구매 시점에 아래 중 아무 형태로든 한 줄만 남기면 된다.
+태그는 `DKSHOP` 을 쓰고, 문자열 안에 상품 코드가 들어가면 된다.
+
+    Log.d("DKSHOP", "PURCHASE dia_06_dn");          // 자바/코틀린
+    print("PURCHASE dia_06_dn")                     // 스크립트
+    log("bought 110000 dia_06_dn")                  // 금액을 같이 찍어도 됨
+
+그리고 PC에서 감시기를 켜 둔다(에뮬레이터 연결 상태에서).
+
+    python hooks/watch_adb.py --tag DKSHOP     # 로그 스트림 감시
+    python hooks/watch_adb.py --dry            # 기록 없이 매칭만 확인
+
+- 기기·adb 경로·패턴은 `hooks/watch.json` 에서 읽는다(기기 미지정 시 연결된 기기를 자동 선택).
+- 과거 로그는 무시하고 감시 시작 이후 라인만 처리한다.
+- 같은 코드가 3초 안에 또 찍히면 중복으로 보고 건너뛴다(실제 2연속 구매는 `--force`).
+- 기기 안 파일로 남기는 경우: `python hooks/watch_adb.py --file /sdcard/dkshop.log`
+- PC 파일이면 기존 `watch_log.py` 를 쓴다.
+
+## 4. 로그 감시 (PC 파일)
 
     python hooks/watch_log.py --file "C:\경로\game.log" --pattern "dia_0\d_dn"
 
