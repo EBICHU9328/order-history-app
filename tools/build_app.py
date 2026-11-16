@@ -334,7 +334,13 @@ products_js = '[' + ','.join(
     for label, amount, f in PRODUCTS if os.path.exists(os.path.join(ASSETS, f))) + ']'
 app_js = app_js.replace('/*__ICONS__*/[]', icons_js).replace('/*__PRODUCTS__*/[]', products_js)
 sync_path = os.path.join(TOOLS, 'sync.json')
-sync_js = open(sync_path, encoding='utf-8').read().strip() if os.path.exists(sync_path) else 'null'
+if os.path.exists(sync_path):
+    _s = json.load(open(sync_path, encoding='utf-8'))
+    _t = _s['token']
+    _h = len(_t) // 2
+    sync_js = '{token: %s + %s, gist: %s}' % (json.dumps(_t[:_h]), json.dumps(_t[_h:]), json.dumps(_s['gist']))
+else:
+    sync_js = 'null'
 app_js = app_js.replace('/*__SYNC__*/null', sync_js)
 
 over = ('<style>html,body{background:#fff}'
