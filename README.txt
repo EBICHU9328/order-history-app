@@ -40,6 +40,15 @@ PC가 꺼져 있어도 열립니다. 휴대폰·다른 PC에서 같은 주소를
 ■ 다른 방식으로 띄우기(로컬 서버)
 python serve.py 8000 0.0.0.0 으로도 띄울 수 있습니다. 단 이 경우 기기 간 동기화는 되지 않습니다.
 
+■ 게임에서 자동 기록 (훅)
+게임/모드에서 구매가 일어날 때 아래 한 줄을 부르면 그 항목이 자동으로 올라갑니다.
+
+    python hooks/log_purchase.py dia_06_dn
+
+HTTP 로 받으려면 `python hooks/log_purchase.py --serve` (로컬 전용, 에뮬레이터는 `adb reverse tcp:8770 tcp:8770`).
+로그 감시 방식은 `python hooks/watch_log.py --file <로그경로>`.
+상품 코드·금액 표는 `hooks/purchase_codes.json`, 자세한 사용법은 `hooks/README.md`.
+
 ■ 초기화
 '주문 내역' 오른쪽 [초기화]를 누르면 확인 후 목록을 전부 지웁니다. 다른 기기에도 바로 반영됩니다.
 모달 아래 [전체 삭제]도 같은 동작입니다.

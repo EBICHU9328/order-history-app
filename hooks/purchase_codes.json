@@ -1,0 +1,9 @@
+{
+  "_comment": "상품 코드 → 화면에 기록될 이름/금액/아이콘. 가격 바뀌면 여기만 고치면 됨.",
+  "dia_01_dn": { "title": "dia_01_dn", "amount": 5500,   "icon": "dia.webp" },
+  "dia_02_dn": { "title": "dia_02_dn", "amount": 11000,  "icon": "dia.webp" },
+  "dia_03_dn": { "title": "dia_03_dn", "amount": 22000,  "icon": "dia.webp" },
+  "dia_04_dn": { "title": "dia_04_dn", "amount": 33000,  "icon": "dia.webp" },
+  "dia_05_dn": { "title": "dia_05_dn", "amount": 55000,  "icon": "dia.webp" },
+  "dia_06_dn": { "title": "dia_06_dn", "amount": 110000, "icon": "dia.webp" }
+}

@@ -47,6 +47,7 @@
 - **기기 간 동기화**: 상태는 GitHub gist `orders.json` 에 둔다. 변경 시 700ms 디바운스로 PATCH, 3초 간격 GET 후 서버 `updated_at` 이 로컬보다 크면 교체. localStorage 는 캐시·오프라인 백업이다.
   토큰·gist id 는 `tools/sync.json`(저장소 제외)에서 빌드 시 주입하며, 토큰은 푸시 보호에 걸리지 않게 두 조각으로 문자열 연결해 넣는다(`"gho_abc" + "def"`).
   동기화 표시는 `#dkSync` 점(회색/노랑/초록/빨강)이고 캡쳐 모드에서는 숨긴다.
+- **외부 기록 훅**: `hooks/log_purchase.py`(CLI·HTTP·로그감시). 코드는 `hooks/purchase_codes.json` 에서 금액·아이콘을 찾아 gist 에 append 한다(읽고-쓰기, 충돌 시 재시도). 로컬 127.0.0.1:8770 만 열고, 게임(에뮬레이터)은 `adb reverse` 로 접근. 페이지는 3초 폴링으로 받아 간다.
 - 배포: GitHub Pages(`EBICHU9328/order-history-app`, master 루트) — https://ebichu9328.github.io/order-history-app/
   로컬 확인용 `serve.py` 도 있으나 그 경로로는 동기화하지 않는다.
 - 날짜는 `2026. 11. 10.` 형식으로 표시, 금액은 `₩11,000` / `US$0.00`.
