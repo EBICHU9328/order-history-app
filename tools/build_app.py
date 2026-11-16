@@ -243,6 +243,9 @@ def cut_list(h):
 body = cut_list(body)
 
 ADD_BTN = ('<span class="dk-sync" id="dkSync" data-state="busy" title="동기화 중…"></span>'
+           '<button type="button" class="dk-btn ghost" id="dkReset">'
+           '<i class="google-material-icons" style="font-size:18px;margin-right:5px">restart_alt</i>'
+           '<span>초기화</span></button>'
            '<button type="button" class="dk-btn" id="dkShot">'
            '<i class="google-material-icons" style="font-size:18px;margin-right:5px">photo_camera</i>'
            '<span>캡쳐</span></button>'
@@ -255,6 +258,7 @@ body = body.replace('<div class="LKoj6">11월 총 지출액: ₩38,500</div>',
 MODAL = '''
 <div class="dk-modal" id="dkModal" hidden>
   <form class="dk-card" id="dkForm" autocomplete="off">
+    <div class="dk-bar" aria-hidden="true"></div>
     <h2 id="dkTitle">주문 추가</h2>
     <p class="hint">화면에 표시될 내용을 그대로 입력하세요. 아이콘은 아래에서 고르거나 직접 올릴 수 있습니다.</p>
     <div class="dk-field wide">

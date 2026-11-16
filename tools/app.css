@@ -42,10 +42,22 @@
 body.capture-mode #dkAdd,
 body.capture-mode #dkShot,
 body.capture-mode .dk-sync,
+body.capture-mode #dkReset,
 body.capture-mode .dk-tools,
 body.capture-mode .dk-toast,
 body.capture-mode .dk-modal{display:none!important}
 body.capture-mode #orderList .U6fuTe:hover{background:transparent}
+
+/* 저장 진행 표시 */
+.dk-bar{position:absolute;left:0;right:0;top:0;height:3px;border-radius:16px 16px 0 0;overflow:hidden;
+  background:#e6f4ef;opacity:0;transition:opacity .15s}
+.dk-card[data-busy="1"] .dk-bar{opacity:1}
+.dk-bar:after{content:"";position:absolute;top:0;bottom:0;width:38%;background:#01875f;
+  animation:dk-slide 1s ease-in-out infinite}
+@keyframes dk-slide{0%{left:-40%}100%{left:100%}}
+.dk-card{position:relative}
+.dk-new{background:#e6f4ef!important;transition:background .5s}
+.dk-btn[disabled]{opacity:.6;cursor:default}
 
 /* 빠른 상품 칩 */
 .dk-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}

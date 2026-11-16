@@ -50,9 +50,27 @@
     clearTimeout(toastEl._t);
     toastEl._t = setTimeout(function () { toastEl.classList.remove('on'); }, 1800);
   }
-  function save() {
+  function save(localOnly) {
     try { localStorage.setItem(KEY, JSON.stringify(orders)); } catch (e) { toast('저장 공간이 부족합니다'); }
-    queuePush();
+    if (!localOnly) queuePush();
+  }
+
+  function busy(on) {
+    form.dataset.busy = on ? '1' : '0';
+    var b = $('dkSave');
+    if (b) {
+      b.disabled = on;
+      b.textContent = on ? '저장 중…' : '저장';
+    }
+  }
+
+  function flashRows(count) {
+    var rows = list.querySelectorAll('.U6fuTe');
+    var from = Math.max(0, rows.length - count);
+    for (var i = from; i < rows.length; i++) rows[i].classList.add('dk-new');
+    setTimeout(function () {
+      for (var j = from; j < rows.length; j++) if (rows[j]) rows[j].classList.remove('dk-new');
+    }, 1500);
   }
   function load() {
     try {
@@ -119,23 +137,30 @@
     pushTimer = setTimeout(push, 700);
   }
 
+  function pushNow() {
+    clearTimeout(pushTimer);
+    return push();
+  }
+
   function push() {
-    if (!SYNC || !SYNC.token || !SYNC.gist || pushing) return;
+    if (!SYNC || !SYNC.token || !SYNC.gist) return Promise.resolve(false);
+    if (pushing) return Promise.resolve(false);
     pushing = true;
     mark('busy');
-    fetch(API + SYNC.gist, {
+    return fetch(API + SYNC.gist, {
       method: 'PATCH',
       headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
       body: JSON.stringify({ files: { 'orders.json': { content: JSON.stringify({ orders: orders }) } } })
     }).then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
-        if (!data) { mark('err'); return; }
+        if (!data) { mark('err'); return false; }
         remoteAt = Date.parse(data.updated_at) || Date.now();
         try { localStorage.setItem(KEY + '.at', String(remoteAt)); } catch (e) { }
         mark('ok');
+        return true;
       })
-      .catch(function () { mark('err'); })
-      .then(function () { pushing = false; });
+      .catch(function () { mark('err'); return false; })
+      .then(function (ok) { pushing = false; return ok; });
   }
 
   function startSync() {
@@ -333,6 +358,8 @@
     if (!title) { $('dkName').focus(); return; }
     if (!isFinite(amount) || amount < 0) { $('dkAmount').focus(); return; }
 
+    if (form.dataset.busy === '1') return;
+
     var base = {
       title: title,
       date: $('dkDate').value || today(),
@@ -340,22 +367,44 @@
       currency: $('dkCurrency').value,
       status: $('dkStatus').value || null,
       report: $('dkReport').checked,
-      icon: formIcon || (PRESETS[0] && PRESETS[0].src) || ''
+      icon: formIcon || (ICONS[0] && ICONS[0].src) || ''
     };
 
-    if (editingId) {
+    var editing = !!editingId;
+    var n = 1;
+    if (editing) {
       var at = indexOf(editingId);
       if (at > -1) orders[at] = Object.assign({}, orders[at], base);
-      save(); render(); close(); toast('수정했습니다');
-      return;
+    } else {
+      n = Math.max(1, Math.min(50, Number($('dkRepeat').value) || 1));
+      for (var i = 0; i < n; i++) orders.push(Object.assign({ id: uid() }, base));
+    }
+    render();
+    if (!editing) flashRows(n);
+    save(true);
+    busy(true);
+
+    var settled = false, guard = null;
+    function done(ok) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(guard);
+      busy(false);
+      close();
+      if (ok) {
+        toast(editing ? '수정했습니다' : n > 1 ? n + '건을 추가했습니다' : '추가했습니다');
+      } else {
+        mark('err');
+        toast(editing ? '수정했습니다 (오프라인 저장)' : (n > 1 ? n + '건' : '1건') + ' 추가됨 (오프라인 저장)');
+      }
+      if (!editing) {
+        var last = list.lastElementChild;
+        if (last) last.scrollIntoView({ block: 'nearest' });
+      }
     }
 
-    var n = Math.max(1, Math.min(50, Number($('dkRepeat').value) || 1));
-    for (var i = 0; i < n; i++) orders.push(Object.assign({ id: uid() }, base));
-    save(); render(); close();
-    toast(n > 1 ? n + '건을 추가했습니다' : '추가했습니다');
-    var last = list.lastElementChild;
-    if (last) last.scrollIntoView({ block: 'nearest' });
+    guard = setTimeout(function () { done(false); }, 5000);
+    pushNow().then(function (ok) { done(!!ok); });
   });
 
   /* ── 행 도구 ──────────────────────────────────────────── */
@@ -501,6 +550,7 @@
 
   /* ── 하단 도구: 내보내기/가져오기/전체 삭제 ───────────── */
   $('dkAdd').addEventListener('click', function () { open(null); });
+  $('dkSave').addEventListener('click', function () { form.requestSubmit(); });
   $('dkShot').addEventListener('click', capture);
   $('dkCancel').addEventListener('click', close);
   $('dkX').addEventListener('click', close);
@@ -540,10 +590,20 @@
     ev.target.value = '';
   });
 
-  $('dkClear').addEventListener('click', function () {
-    if (!orders.length) return toast('이미 비어 있습니다');
+  function clearAll() {
+    if (!orders.length) { toast('이미 비어 있습니다'); return; }
     if (!confirm('주문 내역을 모두 지울까요? (' + orders.length + '건)')) return;
-    orders = []; save(); render(); close(); toast('모두 지웠습니다');
+    orders = [];
+    save();
+    render();
+    close();
+    toast('주문 내역을 초기화했습니다');
+  }
+
+  $('dkClear').addEventListener('click', clearAll);
+  $('dkReset').addEventListener('click', function () {
+    $('dkModal').hidden = true;
+    clearAll();
   });
 
   load();
