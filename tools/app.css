@@ -1,0 +1,103 @@
+
+/* ── 편집 UI (페이지 톤에 맞춘 최소 스타일) ───────────────── */
+#dkAdd{margin-right:4px}
+#dkAdd .dk-ic{margin-right:6px}
+.dk-btn{display:inline-flex;align-items:center;justify-content:center;height:32px;min-height:0;min-width:0;
+  padding:0 14px;font-size:13px;box-sizing:border-box;
+  border:1px solid #dadce0;border-radius:18px;background:#fff;color:#01875f;font:500 14px/1 inherit;
+  cursor:pointer;white-space:nowrap}
+.dk-btn:hover{background:#f1f8f5;border-color:#c9e7dc}
+.dk-btn.primary{background:#01875f;border-color:#01875f;color:#fff}
+.dk-btn.primary:hover{background:#016c4c;border-color:#016c4c}
+.dk-btn.ghost{border-color:transparent;color:#5f6368;padding:0 10px}
+.dk-btn.ghost:hover{background:#f1f3f4}
+.dk-btn[disabled]{opacity:.5;cursor:default}
+.dk-ic{font-size:18px;line-height:1}
+
+/* 행 도구 */
+#orderList .U6fuTe{position:relative}
+#orderList .U6fuTe>.dk-tools{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  display:flex;gap:2px;align-items:center;padding-left:10px;background:inherit;
+  opacity:0;transition:opacity .12s}
+#orderList .U6fuTe:hover>.dk-tools,#orderList .U6fuTe:focus-within>.dk-tools{opacity:1}
+#orderList .U6fuTe>.dk-tools button{color:#5f6368}
+.dk-tools button{width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:#5f6368;
+  font:400 13px/1 inherit;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dk-tools button:hover{background:#e8eaed;color:#202124}
+.dk-tools .del:hover{background:#fce8e6;color:#c5221f}
+.dk-tools button[disabled]{opacity:.35;cursor:default}
+.dk-tools button[disabled]:hover{background:transparent}
+
+/* 빈 상태 */
+#dkEmpty{padding:32px 0 8px;color:#5f6368;font-size:14px}
+#dkEmpty b{display:block;color:#202124;font-size:15px;font-weight:500;margin-bottom:6px}
+
+/* 동기화 표시 */
+.dk-sync{width:8px;height:8px;border-radius:50%;background:#dadce0;margin-right:4px;flex:none}
+.dk-sync[data-state=busy]{background:#f9ab00}
+.dk-sync[data-state=ok]{background:#1e8e3e}
+.dk-sync[data-state=err]{background:#d93025}
+
+/* 캡쳐 모드: 편집 요소를 숨긴다 */
+body.capture-mode #dkAdd,
+body.capture-mode #dkShot,
+body.capture-mode .dk-sync,
+body.capture-mode .dk-tools,
+body.capture-mode .dk-toast,
+body.capture-mode .dk-modal{display:none!important}
+body.capture-mode #orderList .U6fuTe:hover{background:transparent}
+
+/* 빠른 상품 칩 */
+.dk-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.dk-chip{display:flex;align-items:center;gap:6px;height:34px;padding:0 10px 0 6px;border:1px solid #dadce0;
+  border-radius:17px;background:#fff;font:400 12px/1 inherit;color:#3c4043;cursor:pointer;white-space:nowrap}
+.dk-chip img{width:24px;height:24px;border-radius:6px;object-fit:cover;display:block}
+.dk-chip em{font-style:normal;color:#5f6368;margin-left:auto}
+.dk-chip:hover{border-color:#c9e7dc;background:#f1f8f5}
+.dk-chip[aria-pressed=true]{border-color:#01875f;background:#e6f4ef;color:#016c4c}
+.dk-chip em:empty{display:none}
+
+/* 모달 */
+.dk-modal{position:fixed;inset:0;z-index:90;background:rgba(32,33,36,.5);display:flex;align-items:flex-start;
+  justify-content:center;padding:40px 16px;overflow:auto}
+.dk-modal[hidden]{display:none}
+.dk-card{width:100%;max-width:520px;background:#fff;border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.28);
+  padding:24px;font-size:14px;color:#202124}
+.dk-card h2{margin:0 0 4px;font-size:18px;font-weight:500}
+.dk-card .dk-btn{height:38px;min-height:38px;padding:0 18px;font-size:14px}
+.dk-card p.hint{margin:0 0 18px;color:#5f6368;font-size:12px}
+.dk-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dk-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.dk-field.wide{grid-column:1/-1}
+.dk-field label{font-size:12px;color:#5f6368}
+.dk-field input[type=text],.dk-field input[type=date],.dk-field input[type=number],.dk-field input[type=url],.dk-field select{
+  height:40px;border:1px solid #dadce0;border-radius:8px;padding:0 10px;font:400 14px/1.2 inherit;color:#202124;
+  background:#fff;min-width:0}
+.dk-field input:focus,.dk-field select:focus{outline:2px solid #01875f;outline-offset:-1px;border-color:transparent}
+.dk-money{display:flex;gap:8px}
+.dk-money input{flex:1}
+.dk-money select{width:88px}
+.dk-icons{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dk-icons button{width:46px;height:46px;border:2px solid #dadce0;border-radius:10px;background:#fff;padding:0;cursor:pointer;overflow:hidden}
+.dk-icons button img{width:100%;height:100%;object-fit:cover;display:block}
+.dk-icons button[aria-pressed=true]{border-color:#01875f}
+.dk-icons button.dk-none{font-size:12px;color:#5f6368}
+.dk-upload{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.dk-upload input[type=file]{display:none}
+.dk-check{display:flex;align-items:center;gap:8px;font-size:13px;color:#3c4043}
+.dk-foot{display:flex;gap:8px;align-items:center;margin-top:22px}
+.dk-foot .grow{flex:1}
+.dk-sep{height:1px;background:#e8eaed;margin:20px 0 14px}
+.dk-tools-row{display:flex;gap:8px;flex-wrap:wrap}
+.dk-note{color:#5f6368;font-size:11px;margin-top:8px;line-height:1.5}
+.dk-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:100;background:#202124;color:#fff;
+  padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+.dk-toast.on{opacity:1}
+@media (max-width:600px){
+  .e6OsIe{flex-wrap:wrap;gap:12px;margin-top:22px}
+  .e6OsIe>h1{width:100%}
+  .dk-grid{grid-template-columns:1fr}
+  .dk-chips{grid-template-columns:1fr}
+  #orderList .U6fuTe>.dk-tools{right:0;opacity:1}
+  #orderList .U6fuTe>.dk-tools button{width:26px}
+}
