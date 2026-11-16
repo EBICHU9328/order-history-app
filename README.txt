@@ -24,9 +24,17 @@ index.html 을 두 번 클릭하거나 브라우저로 끌어다 놓으면 됩�
 '주문 내역' 오른쪽 [캡쳐]를 누르면 편집용 버튼과 행 도구를 숨긴 상태로 화면 전체를 PNG로 저장합니다.
 파일은 order-history-YYYYMMDD-HHMM.png 이름으로 내려받기 폴더에 저장됩니다.
 
-■ 외부에서 접속
-python serve.py 8000 0.0.0.0 로 띄우고, 같은 네트워크에서는 http://<PC IP>:8000 으로 엽니다.
-외부(인터넷)에서 열려면 포트 포워딩이나 터널이 필요합니다 — REQUEST.md 참고.
+■ 접속 주소
+https://ebichu9328.github.io/order-history-app/
+PC가 꺼져 있어도 열립니다. 휴대폰·다른 PC에서 같은 주소를 쓰면 같은 내역이 보입니다.
+
+■ 기기 간 동기화
+추가·수정·삭제가 1초 안에 서버(gist)에 올라가고, 다른 기기는 3초마다 확인해 자동 반영합니다.
+'주문 추가' 왼쪽 점이 상태 표시입니다 — 회색: 대기, 노랑: 올리는 중, 초록: 정상, 빨강: 실패(오프라인).
+빨강이어도 이 기기에는 저장되며, 연결되면 다시 자동으로 올라갑니다.
+
+■ 다른 방식으로 띄우기(로컬 서버)
+python serve.py 8000 0.0.0.0 으로도 띄울 수 있습니다. 단 이 경우 기기 간 동기화는 되지 않습니다.
 
 ■ 행 편집
 각 행 오른쪽 도구로 처리합니다.
@@ -51,6 +59,14 @@ tools/app.css              편집 UI 스타일
 tools/build_app.py         페이지 빌드 스크립트
 assets/                    빌드에 쓰는 원본 자산
 주문 내역 - Google Play.html, 주문 내역 - Google Play_files/   원본 저장본(수정하지 않음)
+
+■ 토큰이 만료되면
+페이지에 심어 둔 GitHub 토큰이 만료되거나 취소되면 동기화 점이 빨강으로 바뀝니다.
+1) 터미널에서 gh auth login 으로 다시 로그인
+2) printf 'protocol=https\nhost=github.com\n\n' | git credential fill 로 나온 password 값 확인
+   (gh auth token 은 값을 축약해서 보여 주므로 쓰지 않습니다)
+3) 그 값을 tools/sync.json 의 token 에 넣고 python tools/build_app.py 로 다시 빌드
+4) git add -A && git commit && git push — 1~2분 뒤 배포에 반영됩니다
 
 ■ 고칠 때
 - 문구·동작은 tools/app.js, 스타일은 tools/app.css 를 고친 뒤

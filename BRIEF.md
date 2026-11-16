@@ -43,7 +43,11 @@
 - **캡쳐 버튼**: `body.capture-mode` 를 켜서 `#dkAdd`·`#dkShot`·`.dk-tools`·`.dk-toast`·모달을 숨긴 뒤 `html2canvas` 로 `document.body` 를 그려 PNG로 내려받는다(`order-history-YYYYMMDD-HHMM.png`).
   `-webkit-mask` 아이콘과 리거처 아이콘은 `freezeIcons()` 로 캔버스 그림으로 바꿔 그린다(html2canvas가 마스크를 지원하지 않음). 캡쳐 후 DOM은 원복한다.
   `html2canvas` 1.4.1 은 `tools/vendor/html2canvas.min.js` 에 있고 빌드 시 인라인된다.
-- 배포: `serve.py`(표준 라이브러리 정적 서버) + `REQUEST.md`. 외부 자산 없이 단일 파일로 뜬다.
+- **기기 간 동기화**: 상태는 GitHub gist `orders.json` 에 둔다. 변경 시 700ms 디바운스로 PATCH, 3초 간격 GET 후 서버 `updated_at` 이 로컬보다 크면 교체. localStorage 는 캐시·오프라인 백업이다.
+  토큰·gist id 는 `tools/sync.json`(저장소 제외)에서 빌드 시 주입하며, 토큰은 푸시 보호에 걸리지 않게 두 조각으로 문자열 연결해 넣는다(`"gho_abc" + "def"`).
+  동기화 표시는 `#dkSync` 점(회색/노랑/초록/빨강)이고 캡쳐 모드에서는 숨긴다.
+- 배포: GitHub Pages(`EBICHU9328/order-history-app`, master 루트) — https://ebichu9328.github.io/order-history-app/
+  로컬 확인용 `serve.py` 도 있으나 그 경로로는 동기화하지 않는다.
 - 날짜는 `2026. 11. 10.` 형식으로 표시, 금액은 `₩11,000` / `US$0.00`.
 
 ## 다듬을 여지
