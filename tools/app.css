@@ -33,7 +33,7 @@
 #dkEmpty b{display:block;color:#202124;font-size:15px;font-weight:500;margin-bottom:6px}
 
 /* 동기화 표시 */
-.dk-sync{width:8px;height:8px;border-radius:50%;background:#dadce0;margin-right:4px;flex:none}
+.dk-sync{width:8px;height:8px;border-radius:50%;background:#dadce0;margin-right:4px;flex:none;align-self:center}
 .dk-sync[data-state=busy]{background:#f9ab00}
 .dk-sync[data-state=ok]{background:#1e8e3e}
 .dk-sync[data-state=err]{background:#d93025}
