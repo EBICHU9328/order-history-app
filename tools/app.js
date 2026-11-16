@@ -107,7 +107,7 @@
   function pull() {
     if (!SYNC || !SYNC.token || !SYNC.gist) return;
     if (pushing) return;
-    fetch(API + SYNC.gist, { headers: headers() })
+    fetch(API + SYNC.gist, { headers: headers(), cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         if (!data) { mark('err'); return; }
@@ -149,6 +149,7 @@
     mark('busy');
     return fetch(API + SYNC.gist, {
       method: 'PATCH',
+      cache: 'no-store',
       headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
       body: JSON.stringify({ files: { 'orders.json': { content: JSON.stringify({ orders: orders }) } } })
     }).then(function (r) { return r.ok ? r.json() : null; })

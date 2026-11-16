@@ -1,7 +1,13 @@
 {
-  "_comment": "watch_log.py 설정. 모드가 남기는 로그 경로/패턴에 맞춰 고쳐 쓰세요.",
+  "_comment": "watch_adb.py / watch_log.py 설정. 모드가 로그를 남기는 방식에 맞춰 고쳐 쓰세요.",
+  "adb": "C:/LDPlayer/LDPlayer9/adb.exe",
+  "serial": "emulator-5554",
+  "tags": [
+    "DKSHOP"
+  ],
+  "pattern": "(dia_0\\d_dn|dia_1\\d_dn)",
+  "log_file": "",
   "file": "C:/LDPlayer/LDPlayer9/vms/leidian0/logs/game.log",
-  "pattern": "dia_0\\d_dn",
   "codes": [],
   "interval": 0.5
 }
