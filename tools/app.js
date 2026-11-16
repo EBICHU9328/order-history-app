@@ -5,7 +5,7 @@
   var SYNC = /*__SYNC__*/null;          // { token, gist } — 빌드 시 주입
   var API = 'https://api.github.com/gists/';
   var FILE = 'orders.json';
-  var stamp = 0;                        // 서버 상태의 updatedAt
+  var remoteAt = 0;                     // 서버 상태의 updatedAt
   var pushing = false, pullTimer = null;
   var PRODUCTS = /*__PRODUCTS__*/[];
   var ICONS = /*__ICONS__*/[];
@@ -59,7 +59,7 @@
       var raw = JSON.parse(localStorage.getItem(KEY) || '[]');
       orders = Array.isArray(raw) ? raw : [];
     } catch (e) { orders = []; }
-    try { stamp = Number(localStorage.getItem(KEY + '.at')) || 0; } catch (e) { stamp = 0; }
+    try { remoteAt = Number(localStorage.getItem(KEY + '.at')) || 0; } catch (e) { remoteAt = 0; }
   }
 
   /* ── 다른 기기와 동기화(Gist) ──────────────────────────── */
@@ -78,10 +78,10 @@
 
   function apply(remote, at) {
     orders = Array.isArray(remote) ? remote : [];
-    stamp = at;
+    remoteAt = at;
     try {
       localStorage.setItem(KEY, JSON.stringify(orders));
-      localStorage.setItem(KEY + '.at', String(stamp));
+      localStorage.setItem(KEY + '.at', String(remoteAt));
     } catch (e) { /* 무시 */ }
     render();
   }
@@ -96,7 +96,7 @@
         var f = data.files && data.files[FILE];
         if (!f) { mark('ok'); return; }
         var at = Date.parse(data.updated_at) || 0;
-        if (at > stamp) {
+        if (at > remoteAt) {
           var parsed;
           try { parsed = JSON.parse(f.content); } catch (e) { mark('err'); return; }
           if (pushing) { queuePull(); return; }
@@ -130,8 +130,8 @@
     }).then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         if (!data) { mark('err'); return; }
-        stamp = Date.parse(data.updated_at) || Date.now();
-        try { localStorage.setItem(KEY + '.at', String(stamp)); } catch (e) { }
+        remoteAt = Date.parse(data.updated_at) || Date.now();
+        try { localStorage.setItem(KEY + '.at', String(remoteAt)); } catch (e) { }
         mark('ok');
       })
       .catch(function () { mark('err'); })
