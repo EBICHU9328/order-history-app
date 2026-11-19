@@ -66,10 +66,10 @@
 
   function flashRows(count) {
     var rows = list.querySelectorAll('.U6fuTe');
-    var from = Math.max(0, rows.length - count);
-    for (var i = from; i < rows.length; i++) rows[i].classList.add('dk-new');
+    var to = Math.min(rows.length, count);
+    for (var i = 0; i < to; i++) rows[i].classList.add('dk-new');
     setTimeout(function () {
-      for (var j = from; j < rows.length; j++) if (rows[j]) rows[j].classList.remove('dk-new');
+      for (var j = 0; j < to; j++) if (rows[j]) rows[j].classList.remove('dk-new');
     }, 1500);
   }
   function load() {
@@ -378,7 +378,9 @@
       if (at > -1) orders[at] = Object.assign({}, orders[at], base);
     } else {
       n = Math.max(1, Math.min(50, Number($('dkRepeat').value) || 1));
-      for (var i = 0; i < n; i++) orders.push(Object.assign({ id: uid() }, base));
+      var fresh = [];
+      for (var i = 0; i < n; i++) fresh.push(Object.assign({ id: uid() }, base));
+      orders = fresh.concat(orders);          // 최신이 위로 쌓인다
     }
     render();
     if (!editing) flashRows(n);
@@ -399,8 +401,8 @@
         toast(editing ? '수정했습니다 (오프라인 저장)' : (n > 1 ? n + '건' : '1건') + ' 추가됨 (오프라인 저장)');
       }
       if (!editing) {
-        var last = list.lastElementChild;
-        if (last) last.scrollIntoView({ block: 'nearest' });
+        var first = list.firstElementChild;
+        if (first) first.scrollIntoView({ block: 'nearest' });
       }
     }
 
@@ -425,7 +427,7 @@
       orders.splice(at + 1, 0, orders.splice(at, 1)[0]);
       save(); render();
     } else if (act === 'copy') {
-      orders.splice(at + 1, 0, Object.assign({}, orders[at], { id: uid() }));
+      orders.splice(at, 0, Object.assign({}, orders[at], { id: uid() }));   // 원본 바로 위
       save(); render(); toast('복제했습니다');
     } else if (act === 'edit') {
       open(orders[at]);

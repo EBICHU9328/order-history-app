@@ -96,9 +96,7 @@ def log(code, force=False, note=None):
             'report': True,
             'icon': icon_uri(spec.get('icon', '')),
         }
-        if note:
-            item['title'] = spec['title']
-        orders.append(item)
+        orders.insert(0, item)          # 최신이 위로 — 사이트와 같은 순서
 
         try:
             api(cfg, 'PATCH', {'files': {FILE: {'content': json.dumps({'orders': orders})}}})
